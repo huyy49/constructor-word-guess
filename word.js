@@ -1,37 +1,30 @@
+var Letter = require("./letter.js");
 
-
-var LETTER = require("./letter.js");
-var letter = new LETTER();
-
-var currentGuess = process.argv[2].toLowerCase();
-// console.log(currentGuess);
-
-var currentWord = [];
-
-var checkResult = []
-
-var Word = function (word) {
+function Word(word) {
   this.word = word;
-  var newList = word.split("");
-  console.log(newList);
-  this.printWord = function () {
-    for (var i = 0; i < word.length; i++) {
-      this.checkWord(i);
-      var checkedLetter = newList[i];
-      var letter = new LETTER(newList[i]);
-      currentWord.push(letter.printLetter(checkedLetter));
+  this.letters = [];
+
+  this.makeLetters = function() {
+    var wordArr = this.word.split("");
+    for(var i = 0; i < wordArr.length; i++) {
+      var newLetter = new Letter(wordArr[i]);
+      this.letters.push(newLetter);
     }
-    console.log(currentWord);
   };
-  this.checkWord = function (seq) {
-    if (letter.checkLetter(newList[seq])) {
-      checkResult[seq] = letter.isGuessed;
-      console.log(letter.isGuessed);
-    }
-  }
-  // console.log(currentWord);
-}
 
+  this.makeGuess = function(guess) {
+    this.letters.forEach(letter => {
+      letter.checkLetter(guess);
+    });
+  };
 
-var test = new Word("banana");
-console.log(test.printWord());
+  this.printWord = function() {
+    var wordPrinted = "";
+    this.letters.forEach(letter => {
+      wordPrinted += letter.printLetter() + " ";
+    });
+    return wordPrinted;
+  };
+};
+
+module.exports = Word;
